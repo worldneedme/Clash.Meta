@@ -195,6 +195,20 @@ func ParseProxy(mapping map[string]any, options ...ProxyOption) (C.Proxy, error)
 			break
 		}
 		proxy, err = outbound.NewTailscale(*tailscaleOption)
+	case "naive", "naiveproxy":
+		naiveProxyOption := &outbound.NaiveProxyOption{BasicOption: basicOption}
+		err = decoder.Decode(mapping, naiveProxyOption)
+		if err != nil {
+			break
+		}
+		proxy, err = outbound.NewNaiveProxy(*naiveProxyOption)
+	case "juicity":
+		juicityOption := &outbound.JuicityOption{BasicOption: basicOption}
+		err = decoder.Decode(mapping, juicityOption)
+		if err != nil {
+			break
+		}
+		proxy, err = outbound.NewJuicity(*juicityOption)
 	default:
 		return nil, fmt.Errorf("unsupport proxy type: %s", proxyType)
 	}
